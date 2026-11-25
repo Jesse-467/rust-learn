@@ -13,8 +13,8 @@
 | 第 6 课 | 闭包、迭代器、测试 | `lesson06_closures_iterators` | `lesson06` | 已布置 ✅ |
 | 第 7 课 | 智能指针：Box / Rc / RefCell | `lesson07_smart_pointers` | `lesson07` | 已布置 ✅ |
 | 第 8 课 | 并发：thread / channel / Arc<Mutex> / Send+Sync | `lesson08_concurrency` | `lesson08` | 已布置 ✅ |
-| 第 9 课 | async + tokio | `lesson09_async_tokio` | `lesson09` | 当前课程 |
-| 第 10 课 | 实战项目：多线程内存 KV 存储引擎 | — | `lesson10` | 待学习 |
+| 第 9 课 | async + tokio | `lesson09_async_tokio` | `lesson09` | 已布置 ✅ |
+| 第 10 课 | 实战项目：多线程内存 KV 存储引擎 | `lesson10_mini_kv` | `lesson10` | 已布置 ✅ |
 
 ## 做题流程
 1. 切换到对应课程分支（如 `git checkout lesson09`），进入课程目录（如 `cd lesson09_async_tokio`）

@@ -244,3 +244,14 @@ Rust 默认不会为自定义 `struct` / `enum` 生成打印、拷贝、判等�
 | `tokio::time::sleep(dur).await` | 异步休眠（让出执行权，不阻塞 OS 线程） | `time.Sleep` |
 | `tokio::time::timeout(dur, fut).await` | 给 `Future` 加超时限制，超时返回 `Err(Elapsed)` | `context.WithTimeout` |
 | `tokio::sync::mpsc` / `oneshot` | 异步有界多生产者通道 / 一次性单发通道 | `make(chan T, n)` |
+
+---
+
+## 14. 实战常用标准库速查（第 10 课补充）
+
+| 写法 | 说明与原理 | Go 对照 |
+|---|---|---|
+| `std::time::Instant::now()` | 单调递增时钟（适合算耗时、TTL 过期，不受系统改时间影响） | `time.Now()` (monotonic) |
+| `Duration::from_millis(ms)` | 时间间隔类型 | `time.Duration(ms) * time.Millisecond` |
+| `impl std::error::Error for MyErr {}` | 标记为标准错误类型（需先实现 `Debug` 和 `Display`） | `Error() string` |
+| `slice.join(",")` | 用分隔符拼接字符串切片或 `Vec<String>` | `strings.Join(s, ",")` |
