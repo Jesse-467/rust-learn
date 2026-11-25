@@ -29,3 +29,7 @@ version = "0.1.0"
 [[package]]
 name = "lesson07_smart_pointers"
 version = "0.1.0"
+
+[[package]]
+name = "lesson08_concurrency"
+version = "0.1.0"

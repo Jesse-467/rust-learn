@@ -217,3 +217,16 @@ Rust 默认不会为自定义 `struct` / `enum` 生成打印、拷贝、判等�
 | `RefCell::new(val)` | 内部可变性容器，把借用检查推迟到运行期 | 无（Go 默认可变） |
 | `cell.borrow()` / `cell.borrow_mut()` | 获取运行期只读/独占可变借用（冲突则 panic） | 无 |
 | `Rc<RefCell<T>>` | 单线程下“多所有者 + 可变”的标准组合 | 多个指针指向同一结构体 |
+
+---
+
+## 12. 并发编程高频用法（第 8 课新增）
+
+| 写法 | 说明与原理 | Go 对照 |
+|---|---|---|
+| `thread::spawn(move \|\| ...)` | 创建 OS 线程，`move` 转移所有权，返回 `JoinHandle<T>` | `go func() { ... }()` |
+| `thread::scope(\|s\| ...)` | 作用域线程，可零拷贝借用父栈变量，自动等待全部结束 | `sync.WaitGroup` |
+| `let (tx, rx) = mpsc::channel()` | 多生产者单消费者无界通道，`tx.clone()` 复制发送端 | `make(chan T)` |
+| `Arc::new(Mutex::new(val))` | 多线程共享可变状态的标准组合（数据被包在锁里面） | `struct { mu sync.Mutex; val T }` |
+| `let mut g = m.lock().unwrap()` | 加锁返回守卫，离开作用域自动解锁（可 `drop(g)` 提前解锁） | `mu.Lock(); defer mu.Unlock()` |
+| `RwLock::new(val)` | 读写锁：`.read()` 共享读，`.write()` 独占写 | `sync.RWMutex` |

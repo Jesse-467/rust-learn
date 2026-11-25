@@ -11,8 +11,8 @@
 | 第 4 课 | Vec / HashMap / 模块与 crate | `lesson04_collections_modules` | `lesson04` | 已布置 ✅ |
 | 第 5 课 | 泛型、trait、生命周期 | `lesson05_generics_traits_lifetimes` | `lesson05` | 已布置 ✅ |
 | 第 6 课 | 闭包、迭代器、测试 | `lesson06_closures_iterators` | `lesson06` | 已布置 ✅ |
-| 第 7 课 | 智能指针：Box / Rc / RefCell | `lesson07_smart_pointers` | `lesson07` | 当前课程 |
-| 第 8 课 | 并发：thread / channel / Arc<Mutex> / Send+Sync | — | `lesson08` | 待学习 |
+| 第 7 课 | 智能指针：Box / Rc / RefCell | `lesson07_smart_pointers` | `lesson07` | 已布置 ✅ |
+| 第 8 课 | 并发：thread / channel / Arc<Mutex> / Send+Sync | `lesson08_concurrency` | `lesson08` | 当前课程 |
 | 第 9 课 | async + tokio | — | `lesson09` | 待学习 |
 | 第 10 课 | 实战项目：多线程内存 KV 存储引擎 | — | `lesson10` | 待学习 |
 
