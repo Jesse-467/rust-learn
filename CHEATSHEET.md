@@ -96,3 +96,66 @@
 | `std::mem::swap(a, b)` | `()` | 交换任意两个 `&mut T` 的值（零拷贝，直接换内存位） | `a, b = b, a` |
 | `s.iter()` | 迭代器 | 借用遍历，产出 `&T`（不消费原集合） | `for _, v := range s` |
 | `s.iter().enumerate()` | 迭代器 | 带下标遍历，产出 `(usize, &T)` | `for i, v := range s` |
+
+---
+
+## 4. `#[derive(...)]` 常用派生宏（第 3 课新增）
+
+Rust 默认不会为自定义 `struct` / `enum` 生成打印、拷贝、判等能力，需要用 `#[derive(...)]` 让编译器在编译期自动生成代码：
+
+| 派生 trait | 作用 | Go 对照 |
+|---|---|---|
+| `Debug` | 支持 `{:?}` / `{:#?}` 调试打印 | `fmt.Printf("%+v", x)` |
+| `Clone` | 生成 `.clone()` 深拷贝方法 | 手写拷贝 |
+| `Copy` | 标记为“按位浅拷贝、赋值不 Move”（要求所有字段都是 `Copy`，不能含 `String`/`Vec`） | Go 默认值拷贝 |
+| `PartialEq` / `Eq` | 支持 `==` 和 `!=` 比较（写 `assert_eq!` 必备） | 结构体直接 `==` |
+| `Default` | 生成 `T::default()` 默认值构造方法 | Go 零值（zero value） |
+
+---
+
+## 5. `Option<T>` 高频方法（替代 Go 的 `nil` / `(val, ok)`）
+
+`Option<T>` 只有两个变体：`Some(T)` 和 `None`。
+
+| 方法 / 写法 | 返回类型 | 说明与原理 | Go 对照 |
+|---|---|---|---|
+| `opt.is_some()` / `opt.is_none()` | `bool` | 判断有没有值 | `p != nil` / `p == nil` |
+| `opt.unwrap()` | `T` | 取出值，**如果是 `None` 直接 panic**（仅建议在测试或绝对有把握时用） | 直接 `*p`（nil 时 panic） |
+| `opt.expect("原因")` | `T` | 同 `unwrap()`，但 panic 时附带自定义报错信息 | 手写 panic 信息 |
+| `opt.unwrap_or(default)` | `T` | `Some(v)` 返回 `v`，`None` 返回 `default`（`default` 会提前求值） | `if !ok { v = def }` |
+| `opt.unwrap_or_else(\|\| ...)` | `T` | 同上，但只有 `None` 时才执行闭包（**惰性求值**，构造 `String`/`Vec` 时首选） | `if !ok { v = makeDef() }` |
+| `opt.map(\|v\| ...)` | `Option<U>` | 有值就变换内部值，`None` 原样透传 | 需写 `if ok` |
+| `opt.and_then(\|v\| ...)` | `Option<U>` | 变换函数本身也返回 `Option`，自动拍平（避免 `Option<Option<U>>`） | 嵌套 `if ok` |
+| `opt.filter(\|v\| bool)` | `Option<T>` | 满足条件保留 `Some(v)`，不满足变成 `None` | `if ok && cond` |
+| `opt.ok_or(err)` | `Result<T, E>` | 把 `Option` 转成 `Result`：`Some(v) -> Ok(v)`，`None -> Err(err)` | `if !ok { return err }` |
+| `opt.take()` | `Option<T>` | （需 `&mut Option<T>`）把值**拿走**并在原地留下 `None`，常用于从结构体中移出字段 | `v := *p; *p = nil` |
+| `opt.copied()` | `Option<T>` | 把 `Option<&T>` 转成 `Option<T>`（要求 `T: Copy`，如 `i32`） | 解引用拷贝 |
+| `opt.as_ref()` | `Option<&T>` | 借用内部值而不消费原 `Option` | 取地址 |
+
+---
+
+## 6. `Result<T, E>` 高频方法与 `?` 运算符（替代 Go 的 `(val, error)`）
+
+`Result<T, E>` 只有两个变体：`Ok(T)` 和 `Err(E)`。
+
+| 方法 / 写法 | 返回类型 | 说明与原理 | Go 对照 |
+|---|---|---|---|
+| `expr?` | `T` | **错误传播运算符**：`Ok(v)` 解包出 `v`；`Err(e)` 立即从当前函数返回 `Err(e.into())` | `if err != nil { return zero, err }` |
+| `res.is_ok()` / `res.is_err()` | `bool` | 判断成功还是失败 | `err == nil` / `err != nil` |
+| `res.unwrap()` / `res.expect("msg")` | `T` | 成功取值，失败直接 panic（生产代码慎用，测试代码常用） | 忽略 err 或 panic |
+| `res.unwrap_or(default)` | `T` | 失败时回退到默认值 | `if err != nil { v = def }` |
+| `res.map(\|v\| ...)` | `Result<U, E>` | 成功时变换 `Ok` 里的值，`Err` 原样透传 | 需写 `if err != nil` |
+| `res.map_err(\|e\| ...)` | `Result<T, F>` | 失败时把错误类型 `E` 转换成 `F`（常配合 `?` 使用） | `fmt.Errorf("...: %w", err)` |
+| `res.ok()` | `Option<T>` | 丢弃错误细节，转成 `Option`：`Ok(v) -> Some(v)`，`Err(_) -> None` | `v, err := ...; if err == nil` |
+
+---
+
+## 7. 字符串解析与模式匹配常用技巧（第 3 课新增）
+
+| 写法 | 说明与原理 | Go 对照 |
+|---|---|---|
+| `s.parse::<u16>()` | 解析字符串为目标类型（返回 `Result<u16, ParseIntError>`），`::<T>` 叫 **turbofish** 语法 | `strconv.Atoi` / `ParseUint` |
+| `s.split_once('=')` | 按第一个分隔符拆成 `Option<(&str, &str)>`（零拷贝，比 `split` 更安全高效） | `strings.Cut(s, "=")` |
+| `if let Some(x) = opt { ... }` | 只关心一种匹配模式时的简写（替代只处理一个分支的 `match`） | `if x, ok := ...; ok { ... }` |
+| `let Some(x) = opt else { return None; };` | 守卫式解包：匹配不上就直接提前 `return` / `break`，减少嵌套缩进 | `if !ok { return }` |
+| `matches!(val, Pat1 \| Pat2)` | 宏：判断值是否匹配某个模式，直接返回 `bool` | `switch` 返回 `bool` |
