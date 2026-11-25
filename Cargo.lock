@@ -21,3 +21,7 @@ version = "0.1.0"
 [[package]]
 name = "lesson05_generics_traits_lifetimes"
 version = "0.1.0"
+
+[[package]]
+name = "lesson06_closures_iterators"
+version = "0.1.0"
