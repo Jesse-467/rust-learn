@@ -13,3 +13,7 @@ version = "0.1.0"
 [[package]]
 name = "lesson03_structs_enums"
 version = "0.1.0"
+
+[[package]]
+name = "lesson04_collections_modules"
+version = "0.1.0"

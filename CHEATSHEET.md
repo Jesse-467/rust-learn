@@ -159,3 +159,19 @@ Rust 默认不会为自定义 `struct` / `enum` 生成打印、拷贝、判等�
 | `if let Some(x) = opt { ... }` | 只关心一种匹配模式时的简写（替代只处理一个分支的 `match`） | `if x, ok := ...; ok { ... }` |
 | `let Some(x) = opt else { return None; };` | 守卫式解包：匹配不上就直接提前 `return` / `break`，减少嵌套缩进 | `if !ok { return }` |
 | `matches!(val, Pat1 \| Pat2)` | 宏：判断值是否匹配某个模式，直接返回 `bool` | `switch` 返回 `bool` |
+
+---
+
+## 8. `Vec<T>` 进阶与 `HashMap<K, V>`（第 4 课新增）
+
+| 方法 / 写法 | 返回类型 | 说明与原理 | Go 对照 |
+|---|---|---|---|
+| `v.retain(\|x\| cond)` | `()` | 原地过滤，保留满足条件的元素（O(n) 原地双指针） | 手写原地过滤 |
+| `v.sort()` / `v.dedup()` | `()` | 原地排序 / 移除**相邻**重复元素（去重前通常先 `sort`） | `slices.Sort` + `slices.Compact` |
+| `slice.to_vec()` | `Vec<T>` | 把切片拷贝成拥有所有权的 `Vec<T>` | `slices.Clone` |
+| `HashMap::new()` / `with_capacity(n)` | `HashMap<K, V>` | 创建哈希表（需 `use std::collections::HashMap`） | `make(map[K]V, n)` |
+| `m.get(&k)` | `Option<&V>` | 按引用查询，不插入默认值 | `v, ok := m[k]` |
+| `m.insert(k, v)` | `Option<V>` | 插入并接管所有权，返回被覆盖的旧值 | `m[k] = v` |
+| `m.entry(k).or_insert(def)` | `&mut V` | **单次哈希查找**：无则插默认值，返回可变引用 | 需先查再写 |
+| `m.entry(k).or_default()` | `&mut V` | 同上，按 `V::default()` 惰性插入（如 `Vec::new()` / `0`） | 零值初始化 |
+| `m.entry(k).or_insert_with(\|\| ...)` | `&mut V` | 同上，惰性闭包构造默认值 | `if !ok { m[k] = make() }` |
