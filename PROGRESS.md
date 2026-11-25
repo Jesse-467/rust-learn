@@ -12,12 +12,12 @@
 | 第 5 课 | 泛型、trait、生命周期 | `lesson05_generics_traits_lifetimes` | `lesson05` | 已布置 ✅ |
 | 第 6 课 | 闭包、迭代器、测试 | `lesson06_closures_iterators` | `lesson06` | 已布置 ✅ |
 | 第 7 课 | 智能指针：Box / Rc / RefCell | `lesson07_smart_pointers` | `lesson07` | 已布置 ✅ |
-| 第 8 课 | 并发：thread / channel / Arc<Mutex> / Send+Sync | `lesson08_concurrency` | `lesson08` | 当前课程 |
-| 第 9 课 | async + tokio | — | `lesson09` | 待学习 |
+| 第 8 课 | 并发：thread / channel / Arc<Mutex> / Send+Sync | `lesson08_concurrency` | `lesson08` | 已布置 ✅ |
+| 第 9 课 | async + tokio | `lesson09_async_tokio` | `lesson09` | 当前课程 |
 | 第 10 课 | 实战项目：多线程内存 KV 存储引擎 | — | `lesson10` | 待学习 |
 
 ## 做题流程
-1. 切换到对应课程分支（如 `git checkout lesson07`），进入课程目录（如 `cd lesson07_smart_pointers`）
+1. 切换到对应课程分支（如 `git checkout lesson09`），进入课程目录（如 `cd lesson09_async_tokio`）
 2. 先阅读目录下的 `LESSON.md` 教案，再运行随堂演示 `cargo run --example ...`
 3. 把 `src/exNN_*.rs` 里的 `todo!()` 换成你的实现
 4. `cargo test ex01` 跑单个练习，`cargo test && cargo clippy` 跑全部验收

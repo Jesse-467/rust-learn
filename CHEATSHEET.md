@@ -230,3 +230,17 @@ Rust 默认不会为自定义 `struct` / `enum` 生成打印、拷贝、判等�
 | `Arc::new(Mutex::new(val))` | 多线程共享可变状态的标准组合（数据被包在锁里面） | `struct { mu sync.Mutex; val T }` |
 | `let mut g = m.lock().unwrap()` | 加锁返回守卫，离开作用域自动解锁（可 `drop(g)` 提前解锁） | `mu.Lock(); defer mu.Unlock()` |
 | `RwLock::new(val)` | 读写锁：`.read()` 共享读，`.write()` 独占写 | `sync.RWMutex` |
+
+---
+
+## 13. 异步编程与 `tokio` 高频用法（第 9 课新增）
+
+| 写法 | 说明与原理 | Go 对照 |
+|---|---|---|
+| `#[tokio::main]` / `#[tokio::test]` | 启动 Tokio 异步运行时驱动 `async fn` | Go 内置运行时 |
+| `tokio::spawn(async move { ... })` | 启动轻量异步任务，返回 `JoinHandle<T>` | `go func() { ... }()` |
+| `tokio::join!(f1(), f2())` | 并发轮询多个 `Future`，全部完成后返回元组 | `sync.WaitGroup` |
+| `tokio::select! { ... }` | 多路竞速，第一个完成的分支胜出，其余自动取消（Drop） | `select { case ... }` |
+| `tokio::time::sleep(dur).await` | 异步休眠（让出执行权，不阻塞 OS 线程） | `time.Sleep` |
+| `tokio::time::timeout(dur, fut).await` | 给 `Future` 加超时限制，超时返回 `Err(Elapsed)` | `context.WithTimeout` |
+| `tokio::sync::mpsc` / `oneshot` | 异步有界多生产者通道 / 一次性单发通道 | `make(chan T, n)` |
