@@ -8,8 +8,8 @@
 | 第 1 课 | 基础语法：变量/可变性/shadowing、标量类型与溢出、函数与表达式、控制流、元组与数组 | `lesson01_basics` | `main` | 已完成 ✅ |
 | 第 2 课 | 所有权、借用、`String` vs `&str`、切片 | `lesson02_ownership` | `main` | 已完成 ✅ |
 | 第 3 课 | struct、enum、match、`Option` / `Result` 与错误处理 | `lesson03_structs_enums` | `lesson03` | 已布置 ✅ |
-| 第 4 课 | Vec / HashMap / 模块与 crate | `lesson04_collections_modules` | `lesson04` | 当前课程 |
-| 第 5 课 | 泛型、trait、生命周期 | — | `lesson05` | 待学习 |
+| 第 4 课 | Vec / HashMap / 模块与 crate | `lesson04_collections_modules` | `lesson04` | 已布置 ✅ |
+| 第 5 课 | 泛型、trait、生命周期 | `lesson05_generics_traits_lifetimes` | `lesson05` | 当前课程 |
 | 第 6 课 | 闭包、迭代器、测试 | — | `lesson06` | 待学习 |
 | 第 7 课 | 智能指针：Box / Rc / RefCell | — | `lesson07` | 待学习 |
 | 第 8 课 | 并发：thread / channel / Arc<Mutex> / Send+Sync | — | `lesson08` | 待学习 |

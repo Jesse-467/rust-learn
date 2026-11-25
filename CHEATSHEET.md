@@ -175,3 +175,16 @@ Rust 默认不会为自定义 `struct` / `enum` 生成打印、拷贝、判等�
 | `m.entry(k).or_insert(def)` | `&mut V` | **单次哈希查找**：无则插默认值，返回可变引用 | 需先查再写 |
 | `m.entry(k).or_default()` | `&mut V` | 同上，按 `V::default()` 惰性插入（如 `Vec::new()` / `0`） | 零值初始化 |
 | `m.entry(k).or_insert_with(\|\| ...)` | `&mut V` | 同上，惰性闭包构造默认值 | `if !ok { m[k] = make() }` |
+
+---
+
+## 9. 泛型、Trait 与生命周期速查（第 5 课新增）
+
+| 写法 / Trait | 作用与原理 | Go 对照 |
+|---|---|---|
+| `fn f<T: Clone + Debug>(x: &T)` | Trait Bound（静态分发，编译期单态化，零虚表开销） | `func f[T Constraint](x T)` |
+| `fn f(x: &impl Display)` | `impl Trait` 简写（等价于上面的静态分发） | 泛型约束简写 |
+| `&dyn Trait` / `Box<dyn Trait>` | Trait Object（动态分发，胖指针 + vtable，可放进异构 `Vec`） | Go `interface` |
+| `impl Display for T` | 自定义 `{}` 格式化输出，自动赠送 `.to_string()` | `String() string` |
+| `impl From<A> for B` | 类型转换，自动赠送 `A::into() -> B`，且支持 `?` 自动转错误 | 手写转换函数 |
+| `fn f<'a>(x: &'a str, y: &'a str) -> &'a str` | 描述输入与输出引用的存活关系，不改变实际内存生命周期 | GC 自动管理 |
