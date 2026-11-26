@@ -19,7 +19,11 @@ impl Shape {
     /// - `Rect { width, height }` -> `width * height`
     /// - `Point` -> `0.0`
     pub fn area(&self) -> f64 {
-        todo!()
+        match self {
+            Shape::Circle(r) => PI * r * r,
+            Shape::Point => 0.0,
+            Shape::Rect { width, height } => width * height,
+        }
     }
 }
 
@@ -34,7 +38,15 @@ impl Shape {
 ///
 /// 注意：分支顺序很重要！更具体的分支（如 `401 | 403`、`404`）要写在宽泛范围（`400..=499`）前面。
 pub fn classify_status(code: u16) -> &'static str {
-    todo!()
+    match code {
+        404 => "not_found",
+        401 | 403 => "auth_error",
+        200..300 => "success",
+        300..400 => "redirect",
+        400..500 => "client_error",
+        500..=599 => "server_error",
+        _ => "unknown",
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -54,13 +66,18 @@ impl Command {
     ///
     /// 提示：可以用 `format!(...)` 构造 `String`。
     pub fn describe(&self) -> String {
-        todo!()
+        match self {
+            Command::Quit => "quit".to_string(),
+            Command::Echo(s) => format!("echo: {s}"),
+            Command::Move { x, y } => format!("move to ({x}, {y})"),
+            Command::ChangeColor(a, b, c) => format!("color({a}, {b}, {c})"),
+        }
     }
 
     /// 2.4 判断当前指令是否是 `Command::Quit`。
     /// 提示：试试标准库宏 `matches!(self, Command::Quit)`，非常简洁！
     pub fn is_quit(&self) -> bool {
-        todo!()
+        matches!(self, Command::Quit)
     }
 }
 
@@ -68,7 +85,11 @@ impl Command {
 /// - 如果是 `Command::Echo(s)`，返回 `Some(s.as_str())`（或者 `Some(s)`，Rust 会自动解引用 `&String` 为 `&str`）
 /// - 其他变体一律返回 `None`
 pub fn extract_echo(cmd: &Command) -> Option<&str> {
-    todo!()
+    if let Command::Echo(s) = cmd {
+        Some(s)
+    } else {
+        None
+    }
 }
 
 #[cfg(test)]

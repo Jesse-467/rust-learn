@@ -20,7 +20,17 @@ pub enum ConfigError {
 /// - 如果不含 `'='` -> `Err(ConfigError::MissingEquals)`
 /// - 如果有多个 `'='`，只按第一个 `'='` 切分（提示：用 `str::split_once('=')` + `.ok_or(...)`）
 pub fn parse_key_value(line: &str) -> Result<(&str, &str), ConfigError> {
-    todo!()
+    let s = line.trim();
+    if s.is_empty() {
+        Err(ConfigError::EmptyInput)
+    } else {
+        let res = s.split_once('=').ok_or(ConfigError::MissingEquals);
+        if let Ok((k, v)) = res {
+            Ok((k.trim(), v.trim()))
+        } else {
+            res
+        }
+    }
 }
 
 /// 4.2 将字符串解析为合法端口号（`1..=65535`）：
@@ -29,20 +39,32 @@ pub fn parse_key_value(line: &str) -> Result<(&str, &str), ConfigError> {
 ///   （提示：用 `.map_err(|_| ...)` 转换错误类型，再配合 `?`）
 /// - 如果解析结果是 `0` -> `Err(ConfigError::PortOutOfRange(0))`
 pub fn parse_valid_port(raw: &str) -> Result<u16, ConfigError> {
-    todo!()
+    let r = raw.trim().parse::<u16>();
+    match r {
+        Ok(0) => Err(ConfigError::PortOutOfRange(0)),
+        Ok(n) => Ok(n),
+        Err(_) => Err(ConfigError::InvalidPort(raw.trim().to_string())),
+    }
 }
 
 /// 4.3 组合上面两个函数：输入一行配置（如 `"port = 8080"`），解析出其中的合法端口号。
 /// 要求：用 `?` 串联 `parse_key_value` 和 `parse_valid_port`！
 /// （本题暂不校验 key 名，只要能切出 value 并解析成合法端口即可）
 pub fn extract_port_from_line(line: &str) -> Result<u16, ConfigError> {
-    todo!()
+    let (_k, v) = parse_key_value(line)?;
+    parse_valid_port(v)
 }
 
 /// 4.4 解析两个整数字符串（先 `trim()`）并返回它们的和。
 /// 任意一个解析失败时，直接通过 `?` 把 `ParseIntError` 向上返回。
 pub fn sum_two_numbers(a: &str, b: &str) -> Result<i32, ParseIntError> {
-    todo!()
+    match a.trim().parse::<i32>() {
+        Ok(s) => match b.trim().parse::<i32>() {
+            Ok(t) => Ok(s + t),
+            Err(e) => Err(e),
+        },
+        Err(e) => Err(e),
+    }
 }
 
 #[cfg(test)]
@@ -51,10 +73,16 @@ mod tests {
 
     #[test]
     fn test_parse_key_value() {
-        assert_eq!(parse_key_value("host = 127.0.0.1"), Ok(("host", "127.0.0.1")));
+        assert_eq!(
+            parse_key_value("host = 127.0.0.1"),
+            Ok(("host", "127.0.0.1"))
+        );
         assert_eq!(parse_key_value("token=abc=def"), Ok(("token", "abc=def")));
         assert_eq!(parse_key_value("   "), Err(ConfigError::EmptyInput));
-        assert_eq!(parse_key_value("no_equals_here"), Err(ConfigError::MissingEquals));
+        assert_eq!(
+            parse_key_value("no_equals_here"),
+            Err(ConfigError::MissingEquals)
+        );
     }
 
     #[test]

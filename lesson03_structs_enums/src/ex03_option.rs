@@ -12,12 +12,19 @@
 
 /// 3.1 安全除法：如果 `b == 0.0` 返回 `None`，否则返回 `Some(a / b)`。
 pub fn safe_div(a: f64, b: f64) -> Option<f64> {
-    todo!()
+    if b == 0.0 { None } else { Some(a / b) }
 }
 
 /// 3.2 返回切片中第一个偶数；如果切片为空或没有偶数，返回 `None`。
 pub fn first_even(nums: &[i32]) -> Option<i32> {
-    todo!()
+    let mut res: Option<i32> = None;
+    for x in nums {
+        if x % 2 == 0 {
+            res = Some(*x);
+            break;
+        }
+    }
+    res
 }
 
 /// 3.3 如果 `nick` 有值（且去掉两端空白后非空），返回其全大写形式；
@@ -30,7 +37,17 @@ pub fn first_even(nums: &[i32]) -> Option<i32> {
 ///
 /// 提示：可以先用 `match` 写出来，再试试用 `.map()` + `.filter()` + `.unwrap_or_else()` 链式写！
 pub fn nickname_or_default(nick: Option<&str>) -> String {
-    todo!()
+    let no = "ANONYMOUS".to_string();
+    match nick {
+        Some(s) => {
+            if s.trim() != "" {
+                s.trim().to_string().to_uppercase()
+            } else {
+                no
+            }
+        }
+        None => no,
+    }
 }
 
 /// 3.4 解析有效端口号：
@@ -40,7 +57,15 @@ pub fn nickname_or_default(nick: Option<&str>) -> String {
 ///
 /// 提示：可以试试 Rust 的 `let Some(port) = ... else { return None; };` 或 `.filter(|&p| p > 0)`。
 pub fn parse_port(input: &str) -> Option<u16> {
-    todo!()
+    let x = input.trim().parse::<u16>().ok();
+    if let Some(n) = x {
+        match n {
+            1..=65535 => x,
+            _ => None,
+        }
+    } else {
+        None
+    }
 }
 
 /// 3.5 从可变借用的 `slot` 中把值“拿走”并返回；如果原本是 `None`，返回 `0`。
@@ -48,7 +73,8 @@ pub fn parse_port(input: &str) -> Option<u16> {
 ///
 /// 提示：查一下 `CHEATSHEET.md` 里的 `Option::take()`。
 pub fn take_or_zero(slot: &mut Option<i32>) -> i32 {
-    todo!()
+    if let Some(x) = slot.take() { x } else { 0 }
+    // slot.take().unwrap_or_default()
 }
 
 #[cfg(test)]

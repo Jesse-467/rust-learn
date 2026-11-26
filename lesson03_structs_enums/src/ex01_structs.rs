@@ -17,29 +17,35 @@ impl Rectangle {
     /// 1.1 关联函数（构造函数）：根据宽高创建一个 `Rectangle`。
     /// 提示：字段名和参数名相同时可以简写为 `Self { width, height }`。
     pub fn new(width: u32, height: u32) -> Self {
-        todo!()
+        Rectangle { width, height }
     }
 
     /// 1.2 计算矩形面积（只读借用 `&self`）。
     pub fn area(&self) -> u32 {
-        todo!()
+        (self.width as u64 * self.height as u64) as u32
     }
 
     /// 1.3 判断当前矩形是否能严格装下另一个矩形 `other`
     /// （即 `self.width > other.width && self.height > other.height`）。
     pub fn can_hold(&self, other: &Rectangle) -> bool {
-        todo!()
+        (self.width > other.width && self.height > other.height)
+            || (self.width > other.height && self.height > other.width)
     }
 
     /// 1.4 将当前矩形的宽和高都按 `factor` 倍原地放大（需要 `&mut self`）。
     pub fn scale(&mut self, factor: u32) {
-        todo!()
+        self.width *= factor;
+        self.height *= factor
     }
 
     /// 1.5 消费当前矩形，返回一个正方形（边长取宽和高的较大值 `self.width.max(self.height)`）。
     /// 注意：参数是 `self`，调用后原矩形的所有权被移走。
     pub fn into_square(self) -> Self {
-        todo!()
+        let side = self.width.max(self.height);
+        Rectangle {
+            width: side,
+            height: side,
+        }
     }
 }
 
@@ -55,7 +61,10 @@ impl User {
     /// 消费当前 `User`，返回一个只替换了 `email` 的新 `User`，其余字段保持不变。
     /// 提示：`Self { email: new_email, ..self }`
     pub fn with_email(self, new_email: String) -> Self {
-        todo!()
+        User {
+            email: new_email,
+            ..self
+        }
     }
 }
 
