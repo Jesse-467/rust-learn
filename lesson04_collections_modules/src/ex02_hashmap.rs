@@ -6,24 +6,39 @@ use std::collections::HashMap;
 /// 示例：`"Go rust go"` -> `{"go": 2, "rust": 1}`
 /// 提示：`text.split_whitespace()` + `counts.entry(word).or_insert(0)`。
 pub fn word_count(text: &str) -> HashMap<String, usize> {
-    todo!()
+    let mut m = HashMap::new();
+    for w in text.split_whitespace() {
+        *m.entry(w.to_lowercase()).or_insert(0) += 1;
+    }
+    m
 }
 
 /// 2.2 按首字母（小写 `char`）对单词进行分组，忽略空字符串。
 /// 示例：`&["apple", "Ant", "banana"]` -> `{'a': ["apple", "Ant"], 'b': ["banana"]}`
 /// 提示：`word.chars().next()` 获取首字符，`c.to_ascii_lowercase()` 转小写，`entry(...).or_default().push(...)`。
 pub fn group_by_first_char<'a>(words: &[&'a str]) -> HashMap<char, Vec<&'a str>> {
-    todo!()
+    let mut map: HashMap<char, Vec<&'a str>> = HashMap::new();
+    for &word in words {
+        if let Some(c) = word.chars().next() {
+            map.entry(c.to_ascii_lowercase()).or_default().push(word);
+        }
+    }
+    map
 }
 
 /// 2.3 将 `other` 的计数累加合并到 `base` 中（相同 key 相加，不存在的 key 直接插入）。
 pub fn merge_counts(base: &mut HashMap<String, i32>, other: &HashMap<String, i32>) {
-    todo!()
+    for (k, v) in other {
+        *base.entry(k.clone()).or_default() += v;
+    }
 }
 
 /// 2.4 找出计数 Map 中值最大的那个 key（空 Map 返回 `None`；若有并列，返回任意一个均可）。
 pub fn most_frequent_key(counts: &HashMap<String, usize>) -> Option<String> {
-    todo!()
+    counts
+        .iter()
+        .max_by_key(|(_, v)| *v)
+        .map(|(k, _)| k.clone())
 }
 
 #[cfg(test)]

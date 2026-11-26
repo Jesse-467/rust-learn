@@ -19,17 +19,26 @@ pub mod bank {
     impl Account {
         /// 3.1 创建一个初始余额为 0 的账户。
         pub fn new(owner: &str) -> Self {
-            todo!()
+            Account {
+                owner: owner.to_string(),
+                balance: 0,
+            }
         }
 
         /// 3.2 查询当前余额（只读）。
         pub fn balance(&self) -> u64 {
-            todo!()
+            self.balance
         }
 
         /// 3.3 存款：如果 `amount == 0` 返回 `Err(BankError::InvalidAmount)`，否则累加余额并返回 `Ok(())`。
         pub fn deposit(&mut self, amount: u64) -> Result<(), BankError> {
-            todo!()
+            match amount {
+                0 => Err(BankError::InvalidAmount),
+                _ => {
+                    self.balance += amount;
+                    Ok(())
+                }
+            }
         }
 
         /// 3.4 取款：
@@ -37,7 +46,17 @@ pub mod bank {
         /// - `amount > self.balance` -> `Err(BankError::InsufficientFunds)`
         /// - 否则扣减余额并返回 `Ok(())`
         pub fn withdraw(&mut self, amount: u64) -> Result<(), BankError> {
-            todo!()
+            match amount {
+                0 => Err(BankError::InvalidAmount),
+                _ => {
+                    if self.balance < amount {
+                        Err(BankError::InsufficientFunds)
+                    } else {
+                        self.balance -= amount;
+                        Ok(())
+                    }
+                }
+            }
         }
     }
 }
