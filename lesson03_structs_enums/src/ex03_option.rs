@@ -73,8 +73,7 @@ pub fn parse_port(input: &str) -> Option<u16> {
 ///
 /// 提示：查一下 `CHEATSHEET.md` 里的 `Option::take()`。
 pub fn take_or_zero(slot: &mut Option<i32>) -> i32 {
-    if let Some(x) = slot.take() { x } else { 0 }
-    // slot.take().unwrap_or_default()
+    slot.take().unwrap_or_default()
 }
 
 #[cfg(test)]
